@@ -3,6 +3,10 @@ local scene = storyboard.newScene()
 
 local ui = require "scripts.lib.ui"
 local radlib = require "scripts.lib.radlib"
+local _ = require "scripts.lib.underscore"
+
+local countries = require "countries"
+countries = _.shuffle( countries )
 
 ---------------------------------------------------------------------------------
 -- BEGINNING OF VARIABLE DECLARATIONS
