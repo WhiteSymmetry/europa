@@ -11,8 +11,13 @@ countries = _.shuffle( countries )
 ---------------------------------------------------------------------------------
 -- BEGINNING OF VARIABLE DECLARATIONS
 ---------------------------------------------------------------------------------
+local START_X = 500
+local START_Y = 1700
+
 local screen = nil
 local imgEuropeMap = nil
+local imgCurrentCountry = nil
+local txtCurrentCountry = nil
 local txtTimeDisplay = nil
 local timeSpent = 0
 
@@ -40,6 +45,22 @@ local renderTimer = function()
   return t
 end
 
+local renderCountryImage = function( country )
+  local img = display.newImageRect( "images/" .. country.image, country.width, country.height )
+  img.x = START_X
+  img.y = START_Y
+  img.country = country
+
+  return img
+end
+
+local renderCountryText = function( country )
+  local txt = display.newText( country.name, START_X, START_Y + 200, native.systemFont, 120 )
+  txt.x = txt.x - txt.width/2
+
+  return txt
+end
+
 local clockTick = function( event )
   timeSpent = timeSpent + 1
   txtTimeDisplay.text = string.format( "%03d", timeSpent )
@@ -55,6 +76,11 @@ function scene:createScene( event )
   screen:insert( txtTimeDisplay )
 
   currentCountry = countries[1]
+  imgCurrentCountry = renderCountryImage( currentCountry )
+  screen:insert( imgCurrentCountry )
+
+  txtCurrentCountry = renderCountryText( currentCountry )
+  screen:insert( txtCurrentCountry )
 
   gameTimer = timer.performWithDelay( 1000, clockTick, 0 )
 end
