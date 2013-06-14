@@ -9,7 +9,8 @@ local radlib = require "scripts.lib.radlib"
 ---------------------------------------------------------------------------------
 local screen = nil
 local imgEuropeMap = nil
-
+local txtTimeDisplay = nil
+local timeSpent = 0
 ---------------------------------------------------------------------------------
 -- END OF VARIABLE DECLARATIONS
 ---------------------------------------------------------------------------------
@@ -26,11 +27,21 @@ local renderEuropeMap = function()
   return map
 end
 
+local renderTimer = function()
+  local t = display.newText( '000', 1000, 1600, native.systemFont, 240 )
+  t:setTextColor( 180, 180, 100 )
+
+  return t
+end
+
 function scene:createScene( event )
   screen = self.view
 
   imgEuropeMap = renderEuropeMap()
   screen:insert( imgEuropeMap )
+
+  txtTimeDisplay = renderTimer()
+  screen:insert( txtTimeDisplay )
 end
 
 function scene:enterScene( event )
