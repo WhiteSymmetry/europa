@@ -54,6 +54,8 @@ function scene:createScene( event )
   txtTimeDisplay = renderTimer()
   screen:insert( txtTimeDisplay )
 
+  currentCountry = countries[1]
+
   gameTimer = timer.performWithDelay( 1000, clockTick, 0 )
 end
 
