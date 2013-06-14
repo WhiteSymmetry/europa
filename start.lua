@@ -11,6 +11,8 @@ local screen = nil
 local imgEuropeMap = nil
 local txtTimeDisplay = nil
 local timeSpent = 0
+
+local gameTimer = nil
 ---------------------------------------------------------------------------------
 -- END OF VARIABLE DECLARATIONS
 ---------------------------------------------------------------------------------
@@ -34,6 +36,11 @@ local renderTimer = function()
   return t
 end
 
+local clockTick = function( event )
+  timeSpent = timeSpent + 1
+  txtTimeDisplay.text = string.format( "%03d", timeSpent )
+end
+
 function scene:createScene( event )
   screen = self.view
 
@@ -42,16 +49,16 @@ function scene:createScene( event )
 
   txtTimeDisplay = renderTimer()
   screen:insert( txtTimeDisplay )
+
+  gameTimer = timer.performWithDelay( 1000, clockTick, 0 )
 end
 
 function scene:enterScene( event )
-  print("Start loaded...")
-
-  storyboard.removeAll()
+  timer.resume( gameTimer )
 end
 
 function scene:exitScene( event )
-  -- stop timers, sound, etc.
+  timer.pause( gameTimer )
 end
 
 function scene:destroyScene( event )
