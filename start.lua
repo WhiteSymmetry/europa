@@ -8,6 +8,7 @@ local radlib = require "scripts.lib.radlib"
 -- BEGINNING OF VARIABLE DECLARATIONS
 ---------------------------------------------------------------------------------
 local screen = nil
+local imgEuropeMap = nil
 
 ---------------------------------------------------------------------------------
 -- END OF VARIABLE DECLARATIONS
@@ -17,8 +18,19 @@ local screen = nil
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
+local renderEuropeMap = function()
+  local map = display.newImageRect( "images/europe.png", 1372, 1395 )
+  map.x = display.contentWidth/2
+  map.y = display.contentHeight/2 - 280
+
+  return map
+end
+
 function scene:createScene( event )
   screen = self.view
+
+  imgEuropeMap = renderEuropeMap()
+  screen:insert( imgEuropeMap )
 end
 
 function scene:enterScene( event )
