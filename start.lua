@@ -30,7 +30,43 @@ local gameTimer = nil
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
-local onTouchCountry = function( event )
+local onTouchCountry = nil
+local renderCountryImage = nil
+local renderCountryText = nil
+
+local isWithinTargetPosition = function( t )
+  if ( math.abs(t.country.targetPosition.x - t.x) < t.country.targetPosition.dx ) and
+    ( math.abs(t.country.targetPosition.y - t.y) < t.country.targetPosition.dy ) then
+    return true
+  else
+    return false
+  end
+end
+
+local moveToTargetPosition = function( t )
+  transition.to( t, {time = 300, x = t.country.targetPosition.x, y = t.country.targetPosition.y} )
+end
+
+local moveToStartPosition = function( t )
+  transition.to( t, {time = 300, x = START_X, y = START_Y} )
+end
+
+local showNextCountry = function()
+  table.remove( countries, 1 )
+  if #countries > 0 then
+    currentCountry = countries[1]
+    imgCurrentCountry:removeEventListener( "touch", onTouchCountry )
+    txtCurrentCountry:removeSelf()
+    imgCurrentCountry = renderCountryImage( currentCountry )
+    screen:insert( imgCurrentCountry )
+    txtCurrentCountry = renderCountryText( currentCountry )
+    screen:insert( txtCurrentCountry )
+  else
+    doEndOfGame()
+  end
+end
+
+onTouchCountry = function( event )
   local t = event.target
   local phase = event.phase
 
@@ -45,6 +81,12 @@ local onTouchCountry = function( event )
       print("x = " .. t.x .. ", y = " .. t.y)
     elseif "ended" == phase or "cancelled" == phase then
       t.isFocus = false
+      if isWithinTargetPosition( t ) then
+        moveToTargetPosition( t )
+        showNextCountry()
+      else
+        moveToStartPosition( t )
+      end
     end
   end
 end
@@ -64,7 +106,7 @@ local renderTimer = function()
   return t
 end
 
-local renderCountryImage = function( country )
+renderCountryImage = function( country )
   local img = display.newImageRect( "images/" .. country.image, country.width, country.height )
   img.x = START_X
   img.y = START_Y
@@ -74,7 +116,7 @@ local renderCountryImage = function( country )
   return img
 end
 
-local renderCountryText = function( country )
+renderCountryText = function( country )
   local txt = display.newText( country.name, START_X, START_Y + 200, native.systemFont, 120 )
   txt.x = txt.x - txt.width/2
 
