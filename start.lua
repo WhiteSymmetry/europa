@@ -30,6 +30,25 @@ local gameTimer = nil
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
+local onTouchCountry = function( event )
+  local t = event.target
+  local phase = event.phase
+
+  if "began" == phase then
+    t.isFocus = true
+    t.x0 = event.x - t.x
+    t.y0 = event.y - t.y
+  elseif t.isFocus then
+    if "moved" == phase then
+      t.x = event.x - t.x0
+      t.y = event.y - t.y0
+      print("x = " .. t.x .. ", y = " .. t.y)
+    elseif "ended" == phase or "cancelled" == phase then
+      t.isFocus = false
+    end
+  end
+end
+
 local renderEuropeMap = function()
   local map = display.newImageRect( "images/europe.png", 1372, 1395 )
   map.x = display.contentWidth/2
@@ -50,6 +69,7 @@ local renderCountryImage = function( country )
   img.x = START_X
   img.y = START_Y
   img.country = country
+  img:addEventListener( "touch", onTouchCountry )
 
   return img
 end
