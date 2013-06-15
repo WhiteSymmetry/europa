@@ -68,6 +68,10 @@ local renderScore = function( score )
   return txt
 end
 
+local goBackToMainMenu = function( event )
+  storyboard.gotoScene( "menu", "fade", 5000 )
+end
+
 local doEndOfGame = function()
   timer.cancel( gameTimer )
   txtCurrentCountry:removeSelf()
@@ -76,6 +80,8 @@ local doEndOfGame = function()
   score = calculateScore( timeSpent )
   txtScoreDisplay = renderScore( score )
   screen:insert( txtScoreDisplay )
+
+  imgEuropeMap:addEventListener( "touch", goBackToMainMenu )
 end
 
 local showNextCountry = function()
