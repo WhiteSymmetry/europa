@@ -19,7 +19,9 @@ local imgEuropeMap = nil
 local imgCurrentCountry = nil
 local txtCurrentCountry = nil
 local txtTimeDisplay = nil
+local txtScoreDisplay = nil
 local timeSpent = 0
+local score = 0
 
 local gameTimer = nil
 ---------------------------------------------------------------------------------
@@ -49,6 +51,31 @@ end
 
 local moveToStartPosition = function( t )
   transition.to( t, {time = 300, x = START_X, y = START_Y} )
+end
+
+local calculateScore = function( timeSpent )
+  if timeSpent > 60 then
+    return 100
+  else
+    return 100 + 10*(60 - timeSpent)
+  end
+end
+
+local renderScore = function( score )
+  local txt = display.newText( "Your Score: " .. score, display.contentWidth/2, 1600, native.systemFont, 120 )
+  txt.x = txt.x - txt.width/2
+
+  return txt
+end
+
+local doEndOfGame = function()
+  timer.cancel( gameTimer )
+  txtCurrentCountry:removeSelf()
+  txtTimeDisplay:removeSelf()
+
+  score = calculateScore( timeSpent )
+  txtScoreDisplay = renderScore( score )
+  screen:insert( txtScoreDisplay )
 end
 
 local showNextCountry = function()
